@@ -7,7 +7,7 @@ OBJCOPY= objcopy
 
 LIBS= lib/lib.o
 
-QEMU = qemu-system-i386
+QEMU = qemu-system-x86_64
 QEMUOPTS = -cpu pentium -rtc base=localtime -k fr -m 256M  -kernel kernel.bin
 QEMUGDB= -s -S -gdb tcp::1234
 

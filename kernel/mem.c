@@ -8,7 +8,7 @@
  * @param addr Adresse de la page à allouer
  */
 void setPage(uint32_t addr) {
-
+    
 }
 
 /**
