@@ -1,5 +1,7 @@
 #include <n7OS/mem.h>
 
+uint32_t free_page_bitmap_table[NBR_PAGES/32];
+
 /**
  * @brief Marque la page allouée
  * 
@@ -8,7 +10,10 @@
  * @param addr Adresse de la page à allouer
  */
 void setPage(uint32_t addr) {
-    
+    int page_num = addr / PAGE_SIZE;
+    int table_index = page_num / 32;
+    int bit_index = page_num % 32;
+    free_page_bitmap_table[table_index] |= (1 << bit_index);
 }
 
 /**
@@ -19,7 +24,10 @@ void setPage(uint32_t addr) {
  * @param addr Adresse de la page à libérer
  */
 void clearPage(uint32_t addr) {
-
+    int page_num = addr / PAGE_SIZE;
+    int table_index = page_num / 32;
+    int bit_index = page_num % 32;
+    free_page_bitmap_table[table_index] &= ~(1 << bit_index);
 }
 
 /**
@@ -29,8 +37,16 @@ void clearPage(uint32_t addr) {
  */
 uint32_t findfreePage() {
     uint32_t adresse= 0x0;
-
-    return adresse;
+    for (int i=0; i < (NBR_PAGES/32); i++) {
+        for (int j=0; j<32; j++) {
+            if (!(free_page_bitmap_table[i] & (1 << j))) {
+                adresse = (i*32+j)*PAGE_SIZE;
+                setPage(adresse); // marquer la page comme allouée
+                return adresse; // adresse de la page libre trouvée
+            }
+        }
+    }
+    return 0xFFFFFFFF; // aucune page libre trouvée
 }
 
 /**
@@ -38,7 +54,7 @@ uint32_t findfreePage() {
  * 
  */
 void init_mem() {
-
+    memset(free_page_bitmap_table, 0, sizeof(free_page_bitmap_table)); // toutes les pages sont libres au début
 }
 
 /**
@@ -46,5 +62,17 @@ void init_mem() {
  * 
  */
 void print_mem() {
-    
+    printf("Taille total de la mémoire : 256Mo\n");
+    printf("Nombre total des pages : %x\n", NBR_PAGES);
+    // Calcul de la mémoire libre
+    int nbr_libre = 0;
+    for (int i=0; i < (NBR_PAGES/32); i++) {
+        for (int j=0; j<32; j++) {
+            if (!(free_page_bitmap_table[i] & (1 << j))) {
+                nbr_libre++;
+            }
+        }
+    }
+    printf("Taille de la mémoire libre en Ko : %d, en Mo : %d\n",nbr_libre*4,(nbr_libre*4)/1000);
+    printf("Nombre des pages libres : %d\n", nbr_libre);
 }

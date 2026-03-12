@@ -23,6 +23,12 @@
 #define PAGE_SIZE 0x1000
 
 /**
+ * @brief Nombre des pages en mémoire
+ * 
+ */
+#define NBR_PAGES (LAST_MEMORY_INDEX+1) / PAGE_SIZE
+
+/**
  * @brief Marque la page allouée
  * 
  * Lorsque la page a été choisie, cette fonction permet de la marquer allouée
