@@ -11,7 +11,12 @@ void kernel_start(void)
     // effacer l'écran et afficher le curseur au début de l'écran
     printf("\f");
     
-    setup_base(0 /* la memoire virtuelle n'est pas encore definie */);
+        // initialiser la pagination
+    initialise_paging();
+    alloc_page_entry(0xA000000, 1, 1); // allouer une page pour l'adresse 0xA000000
+    uint32_t *ptr = (uint32_t *) 0xA000000;
+    int page_defaut = *ptr;
+    page_defaut++;
 
     // lancement des interruptions
     sti();

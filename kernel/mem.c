@@ -10,9 +10,9 @@ uint32_t free_page_bitmap_table[NBR_PAGES/32];
  * @param addr Adresse de la page à allouer
  */
 void setPage(uint32_t addr) {
-    int page_num = addr / PAGE_SIZE;
-    int table_index = page_num / 32;
-    int bit_index = page_num % 32;
+    uint32_t page_num = addr / PAGE_SIZE;
+    uint32_t table_index = page_num / 32;
+    uint32_t bit_index = page_num % 32;
     free_page_bitmap_table[table_index] |= (1 << bit_index);
 }
 
@@ -24,9 +24,9 @@ void setPage(uint32_t addr) {
  * @param addr Adresse de la page à libérer
  */
 void clearPage(uint32_t addr) {
-    int page_num = addr / PAGE_SIZE;
-    int table_index = page_num / 32;
-    int bit_index = page_num % 32;
+    uint32_t page_num = addr / PAGE_SIZE;
+    uint32_t table_index = page_num / 32;
+    uint32_t bit_index = page_num % 32;
     free_page_bitmap_table[table_index] &= ~(1 << bit_index);
 }
 
@@ -62,7 +62,7 @@ void init_mem() {
  * 
  */
 void print_mem() {
-    printf("Taille total de la mémoire : 256Mo\n");
+    printf("Taille total de la mémoire : 16Mo\n");
     printf("Nombre total des pages : %x\n", NBR_PAGES);
     // Calcul de la mémoire libre
     int nbr_libre = 0;
