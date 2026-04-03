@@ -1,22 +1,46 @@
 {
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "gdb",
-      "request": "attach",
-      "name": "Attach to gdbserver",
-      "executable": "${workspaceRoot}/kernel.bin",
-      "target": "localhost:1234",
-      "remote": true,
+      "name": "Launch with GDB",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceRoot}/kernel.bin",
       "cwd": "${workspaceRoot}",
-      "gdbpath": "gdb",
-      "valuesFormatting": "parseText",
-      "autorun": [
-        "dir kernel",
-        "dir boot",
-        "dir bin",
-        "dir lib"
-      ]
+      "args": [],
+      // "sourceFileMap": {
+      //      "<source-path>": "<target-path>"
+      // },
+      "targetArchitecture": "x86",
+      "MIMode": "gdb",
+      "miDebuggerPath": "",
+      "miDebuggerArgs": "",
+      "customLaunchSetupCommands": [
+        {
+          "text": "target remote localhost:1234",
+          "description": "Connect to QEMU remote debugger"
+        }
+      ],
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "text": "file ${workspaceRoot}/kernel.bin",
+          "description": "Load binary."
+        },
+        {
+          "text": "break isr_handler",
+          "description": "Break on exception handler."
+        }
+      ],
+      "preLaunchTask": "build and launch QEMU",
+      "postDebugTask": "kill QEMU"
     }
   ]
 }

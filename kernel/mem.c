@@ -62,8 +62,8 @@ void init_mem() {
  * 
  */
 void print_mem() {
-    printf("Taille total de la mémoire : 16Mo\n");
-    printf("Nombre total des pages : %x\n", NBR_PAGES);
+    printf("Taille total de la memoire : 16Mo\n");
+    printf("Nombre total des pages : %d\n", NBR_PAGES);
     // Calcul de la mémoire libre
     int nbr_libre = 0;
     for (int i=0; i < (NBR_PAGES/32); i++) {
@@ -73,6 +73,6 @@ void print_mem() {
             }
         }
     }
-    printf("Taille de la mémoire libre en Ko : %d, en Mo : %d\n",nbr_libre*4,(nbr_libre*4)/1000);
+    printf("Taille de la memoire libre en Ko : %d, en Mo : %d\n",nbr_libre*4,(nbr_libre*4)/1000);
     printf("Nombre des pages libres : %d\n", nbr_libre);
 }
