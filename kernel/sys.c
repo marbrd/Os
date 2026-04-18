@@ -3,12 +3,14 @@
 #include <n7OS/console.h>
 #include <n7OS/irq.h>
 #include <unistd.h>
+#include <n7OS/cpu.h>
 
 extern void handler_syscall();
 
 void init_syscall() {
   // ajout de la fonction de traitement de l'appel systeme
   add_syscall(NR_example, sys_example);
+  add_syscall(NR_shutdown, sys_shutdown);
   add_syscall(NR_write, sys_write);
 
   // initialisation de l'IT soft qui gère les appels systeme
@@ -24,4 +26,13 @@ int sys_example() {
 int sys_write(const char *s, int len) {
   console_putbytes(s, len);
   return 1;
+}
+
+int sys_shutdown(int n) {
+  if (n == 1) {
+    outw(0x2000, 0x604); // Poweroff qemu > 2.0
+    return -1;
+  } else {
+    return n;
+  }
 }

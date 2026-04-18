@@ -4,7 +4,8 @@
 uint16_t *scr_tab;
 
 /** Position du curseur dans le tableau de d'écran */
-int ligne_colonne[2] = {0, 0};
+int ligne_colonne[2] = {1, 0};
+int sauvegarde_ligne_colonne[2];
 
 /** Retourne la position du curseur dans le tampon d'écran */
 int position () {
@@ -16,7 +17,7 @@ void incremente_ligne () {
     if (ligne_colonne[0] < VGA_HEIGHT-1) {
         ligne_colonne[0]++;
     } else {
-        ligne_colonne[0]=0;
+        ligne_colonne[0]=1;
     }
 }
 
@@ -60,6 +61,14 @@ void console_putchar(const char c) {
         incremente_position();
     } else {
         switch (c) {
+            case 1: //timer
+                memcpy(sauvegarde_ligne_colonne, ligne_colonne, sizeof(ligne_colonne));
+                ligne_colonne[0]=0;
+                ligne_colonne[1]=71;
+                break;
+            case 2: //back
+                memcpy(ligne_colonne, sauvegarde_ligne_colonne, sizeof(sauvegarde_ligne_colonne));
+                break;
             case 8: // backspace
                 ligne_colonne[1]--;
                 break;
@@ -74,7 +83,7 @@ void console_putchar(const char c) {
             case 12: // form feed
                 for (int i=0; i<VGA_WIDTH*VGA_HEIGHT; i++)
                     scr_tab[i]= CHAR_COLOR<<8|32;
-                ligne_colonne[0]=0;
+                ligne_colonne[0]=1;
                 ligne_colonne[1]=0;
                 break;
             case 13: // carriage return

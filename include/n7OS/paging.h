@@ -12,14 +12,14 @@
  * 
  */
 typedef struct {
-    uint8_t P          : 1; // 1 si la page est présente en mémoire, 0 sinon
-    uint8_t W          : 1; // 1 si la page est accessible en lecture/écriture, 0 si seulement lecture
-    uint8_t U          : 1; // 1 si la page est accessible par l'utilisateur, 0 sinon
-    uint8_t RSVD       : 2; // bits réservés
-    uint8_t A          : 1; // 1 si la page a été accédée, 0 sinon
-    uint8_t D          : 1; // 1 si la page a été modifiée, 0 sinon
-    uint8_t RSVD2      : 2; // bits réservés
-    uint8_t AVAIL      : 3; // bits disponibles pour le système d'exploitation
+    uint32_t P          : 1; // 1 si la page est présente en mémoire, 0 sinon
+    uint32_t W          : 1; // 1 si la page est accessible en lecture/écriture, 0 si seulement lecture
+    uint32_t U          : 1; // 1 si la page est accessible par l'utilisateur, 0 sinon
+    uint32_t RSVD       : 2; // bits réservés
+    uint32_t A          : 1; // 1 si la page a été accédée, 0 sinon
+    uint32_t D          : 1; // 1 si la page a été modifiée, 0 sinon
+    uint32_t RSVD2      : 2; // bits réservés
+    uint32_t AVAIL      : 3; // bits disponibles pour le système d'exploitation
     uint32_t frame     : 20; // adresse de la page physique (frame) associée à cette entrée de table de page
 } page_table_entry_t;
 
@@ -43,10 +43,10 @@ typedef PTE * PageTable;
  * 
  */
 typedef struct {
-    uint8_t P          : 1; // 1 si la page est présente en mémoire, 0 sinon
-    uint8_t W          : 1; // 1 si la page est accessible en lecture/écriture, 0 si seulement lecture
-    uint8_t U          : 1; // 1 si la page est accessible par l'utilisateur, 0 sinon
-    uint16_t RSVD       : 9; // bits réservés
+    uint32_t P          : 1; // 1 si la page est présente en mémoire, 0 sinon
+    uint32_t W          : 1; // 1 si la page est accessible en lecture/écriture, 0 si seulement lecture
+    uint32_t U          : 1; // 1 si la page est accessible par l'utilisateur, 0 sinon
+    uint32_t RSVD       : 9; // bits réservés
     uint32_t frame     : 20; // adresse de la page physique (frame) associée à cette entrée du répertoire de page
 } directory_table_entry_t;
 

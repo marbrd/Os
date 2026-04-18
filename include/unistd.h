@@ -2,7 +2,8 @@
 #define __UNISTD_H__
 
 #define NR_example 0
-#define NR_write 1
+#define NR_shutdown 1
+#define NR_write 2
 
 // Fonction d'enveloppe sans argument
 #define syscall0(type,name) \
@@ -49,6 +50,8 @@ return __res;\
 }
 
 int example();
+
+int shutdown(int n);
 
 int write(const char *s, int len);
 
