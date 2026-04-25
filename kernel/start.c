@@ -19,9 +19,10 @@ void kernel_start(void)
     init_irq();
     // initier les appels système
     init_syscall();
+    // initier le clavier
+    init_keyboard();
     // effacer l'écran et afficher le curseur au début de l'écran
     printf("\f");
-
 
     //test de la pagination
     alloc_page_entry(0xA000000, 1, 1); // allouer une page pour l'adresse 0xA000000
@@ -43,6 +44,8 @@ void kernel_start(void)
     
     // on ne doit jamais sortir de kernel_start
     while (1) {
+        char ch = kgetch();
+        if (ch != -1) printf("%c", ch);
         // cette fonction arrete le processeur
         hlt();
     }

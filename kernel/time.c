@@ -33,6 +33,8 @@ void duree_exec() {
     heures = timer_s/3600;
     minutes = (timer_s%3600)/60;
     secondes = timer_s%60;
-    printf("\x01%02d:%02d:%02d\x02", heures, minutes, secondes);
+    timer_setup();
+    printf("%02d:%02d:%02d", heures, minutes, secondes);
+    timer_cleanup();
 }
 

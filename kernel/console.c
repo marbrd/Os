@@ -30,6 +30,24 @@ void incremente_colonne () {
     }
 }
 
+/** décrémente la ligne du curseur */
+void decremente_ligne () {
+    if (ligne_colonne[0] > 1) {
+        ligne_colonne[0]--;
+    } else {
+        ligne_colonne[0]=VGA_HEIGHT-1;
+    }
+}
+
+/** décrémente la colonne du curseur */
+void decremente_colonne () {
+    if (ligne_colonne[1] > 0) {
+        ligne_colonne[1]--;
+    } else {
+        ligne_colonne[1]=VGA_WIDTH-1;
+    }
+}
+
 /** Incrémente la position du curseur */
 void incremente_position () {
     if (ligne_colonne[1] < VGA_WIDTH-1) {
@@ -37,6 +55,16 @@ void incremente_position () {
     } else {
         ligne_colonne[1]=0;
         incremente_ligne();
+    }
+}
+
+/** décrémente la position du curseur */
+void decremente_position () {
+    if (ligne_colonne[1] > 0) {
+        decremente_colonne();
+    } else {
+        ligne_colonne[1]=VGA_WIDTH-1;
+        decremente_ligne();
     }
 }
 
@@ -61,16 +89,11 @@ void console_putchar(const char c) {
         incremente_position();
     } else {
         switch (c) {
-            case 1: //timer
-                memcpy(sauvegarde_ligne_colonne, ligne_colonne, sizeof(ligne_colonne));
-                ligne_colonne[0]=0;
-                ligne_colonne[1]=71;
-                break;
-            case 2: //back
-                memcpy(ligne_colonne, sauvegarde_ligne_colonne, sizeof(sauvegarde_ligne_colonne));
-                break;
             case 8: // backspace
-                ligne_colonne[1]--;
+                if (position()>80) {
+                    decremente_position();
+                }
+                scr_tab[position()]= CHAR_COLOR<<8|32;
                 break;
             case 9: // tab
                 for (int i=0; i<8; i++)
@@ -87,6 +110,7 @@ void console_putchar(const char c) {
                 ligne_colonne[1]=0;
                 break;
             case 13: // carriage return
+                incremente_ligne();
                 ligne_colonne[1]=0;
                 break;
             default:
@@ -101,4 +125,15 @@ void console_putbytes(const char *s, int len) {
     for (int i= 0; i<len; i++) {
         console_putchar(s[i]);
     }
+}
+
+void timer_setup() {
+    memcpy(sauvegarde_ligne_colonne, ligne_colonne, sizeof(ligne_colonne));
+    ligne_colonne[0]=0;
+    ligne_colonne[1]=72;
+}
+
+void timer_cleanup() {
+    memcpy(ligne_colonne, sauvegarde_ligne_colonne, sizeof(sauvegarde_ligne_colonne));
+    console_cursor();
 }
