@@ -167,7 +167,7 @@ enum KEYCODE {
 	KEY_RIGHTCURL         = '}',
 	KEY_DOLLAR            = '$',
 	KEY_POUND             = '£',
-	KEY_EURO              = '$',
+	KEY_EURO              = '€',
 	KEY_LESS              = '<',
 	KEY_GREATER           = '>',
 	KEY_BAR               = '|',
@@ -283,9 +283,40 @@ static uint16_t scancode_map_shift[] = {
 	0, // Delete
 	0, // Snapshot
 	0,  
-	KEY_LESS,
+	KEY_GREATER,
 	0, 0, // F11, F12
 }; 
+
+// scancode_map_alt is the same as scancode_map but with Alt pressed 
+static uint16_t scancode_map_alt[] = {
+	0, KEY_ESCAPE, 0, KEY_TILDE, KEY_HASH, KEY_LEFTCURL, KEY_LEFTBRACKET, KEY_BAR, KEY_GRAVE, KEY_BACKSLASH, KEY_CARRET, KEY_AT, KEY_RIGHTBRACKET, KEY_RIGHTCURL, 0, // first line
+	KEY_TAB, 0, 0, KEY_EURO, 0, 0, 0, 0, 0, 0, 0, 0, 0, // second line
+	0, // left control,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // third line
+	0, // left shift
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // fourth line
+	0, 0, // Alt
+	0, 0, // Maj
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // F1 à F10
+	0, // Numlock
+	0, // Scrolllock
+	0, // Home
+	0, // Up
+	0, // Page up
+	0,
+	0, // Left
+	0, // Right
+	0,
+	0, // End
+	0, // Down
+	0, // Page down
+	0, // Insert
+	0, // Delete
+	0, // Snapshot
+	0,  
+	0,
+	0, 0, // F11, F12	
+};
 
 // Keyboard initialization function
 void init_keyboard();

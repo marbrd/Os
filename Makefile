@@ -61,7 +61,7 @@ run: all
 	$(QEMU) $(QEMUOPTS)
 
 archive: clean
-	(cd .. ; tar cvf - n7OS | gzip > n7OS_`whoami`.tgz)
+	(cd .. ; tar cvf - n7OS | gzip > n7OS_BERRAD.tgz)
 
 help:
 	@echo Possible options:
