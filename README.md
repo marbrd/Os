@@ -1,106 +1,101 @@
-# Projet développement d'un mini système d'exploitation pour PC x86
+# A Mini x86 Operating System
 
-## Objectifs
+A mini x86 operating system built from scratch in C and assembly. The kernel handles console output, keyboard input, interrupts, a round-robin process scheduler, system calls, and memory paging, all driven by a small custom command shell.
 
-Développer les éléments de base d'un système d'exploitation
+## ✨ Features
 
-Ce que nous verrons :
+- **Console**: text-mode display with color support (`CHAR_COLOR`)
+- **Keyboard**: low-level keyboard driver (AZERTY), character-by-character input
+- **Interrupts (IRQ)**: generic interrupt handling, timer handler, keyboard handler
+- **Timer**: periodic interrupt used for preemption and `sleep`
+- **Processes**:
+  - process table, creation (`fork`) / termination (`kill`/`exit`)
+  - context switching (`ctx_sw.S`)
+  - fair round-robin scheduling
+  - sleeping (`sleep`) with wake-up driven by the timer
+- **System calls** (software interrupt `int 0x80`): `write`, `getpid`, `exit`, `fork`, `sleep`, `kill`, `shutdown`
+- **Memory**: kernel-side allocation (`kheap`, `sbrk`, `malloc`) and **paging** (x86 page tables, virtual memory implementation)
+- **Mini Shell**: command-line interpreter with history, running as a user process
 
-- Gestion d'entrées/sorties de base : le clavier et l'écran
-- Gestion des interruptions
-- Gestion des processus
-- Gestion de la mémoire virtuelle pour les processus
+## 🖥️ The Mini Shell
 
-Ce que nous ne verrons pas :
+The shell runs as a process (`miniShell`) on top of the kernel and supports the following commands:
 
-- Gestion des fichiers
-- Partage de ressources et communication entre processus
-  
-## Organisation
+| Command          | Description                                             |
+|------------------|-----------------------------------------------------------|
+| `help`           | Show this help screen                                     |
+| `ps`             | List running processes                                    |
+| `fork <name>`    | Create a new process from the available ones (see `ps`)   |
+| `kill <pid>`     | Kill the process with the given PID                       |
+| `sleep <secs>`   | Put the current process to sleep (in seconds)              |
+| `echo <message>` | Print a message                                            |
+| `history`        | Show command history                                       |
+| `history -c`     | Clear command history                                       |
+| `clear`          | Clear the screen                                            |
+| `exit` / `shutdown` | Power off the system and quit the mini shell             |
 
-- 14 séances encadrées
-- Pas de cours
-- Programmation en C, un peu d'assembleur
-- Evaluation : code commenté
-  
-## Au menu
+## 📁 Project layout
 
-### Entrée
+```
+.
+├── boot/         # Low-level entry point (crt0.S), linker script
+├── kernel/       # Kernel core: console, irq, timer, keyboard, processes,
+│                 # scheduling, syscalls, paging, memory, panic...
+├── bin/          # User-space processes (mini shell, test processes, idle)
+├── lib/          # Custom standard library (printf, malloc, string, ...)
+├── include/      # Headers (n7OS/, custom libc)
+└── build/        # Shared build configuration
+```
 
-- De l'affichage à la console
-- S'il vous plaît ? Je peux vous interrompre ?
-- Il y a des manières, monsieur ! Utilisez l'appel système !
+## 🚀 Building and running
 
-> - Mise en oeuvre de la console
-> - Appel système write
+### Requirements
 
-### Le plat
+- **GCC** (x86 toolchain)
 
-- Tic Tac Tic Tac, respectez le Timer !
-- Des processus ? Comment tu définis ça ?
-- Alors toi, tu crées des processus et tu les détruis.
-- Il faudrait organiser tout ce beau monde, non ?
-  - Et hop ! Tout le monde en file !
-  - Laissez un peu la place aux autres ! Revenez dans la file ! Respectez le tourniquet !
+  ```bash
+  sudo apt-get install build-essential
+  ```
 
-> - Interruption Timer
-> - Ordonnancement et gestions des processus
+- **QEMU** to run the kernel
 
-### Le dessert
+  ```bash
+  sudo apt-get install qemu-system-x86
+  ```
 
-- C'est bien fichu ici : tu peux commander depuis la table avec un clavier.
+- **GDB** for debugging
 
-> - Lecture au clavier et appel système read
-> - Interpréteur de commandes simple
-
-### Avec ta fourchette !
-
-Il nous faut des couverts !
-
-- Compilation : GCC 
-  
-  ```sudo apt-get install build-essentials```
-
-- Exécution : QEMU
-   
-  ```sudo apt-get install qemu```
-
-- Mise au point : GDB
-    
-    - ```sudo apt-get install gdb```
-    - GDB sera connecté à QEMU et permet d'afficher les problèmes potentiels
+  ```bash
+  sudo apt-get install gdb
+  ```
 
 > [!NOTE]
-> Les commandes données sont pour environnement Debian et dérivés (j'utilise Ubuntu). A adapter en fonction de votre distribution Linux.   
-> Sous Mac : Utiliser les outils `gcc` pour x86 disponible via les `macports` (paquet `i386-elf-gcc`).
+> Commands above are for Debian/Ubuntu.
 
-## Les amuses-bouches
+### Build
 
-### Fichiers fournis 
+```bash
+make
+```
 
-Le répertoire fourni contient :
+Produces `kernel.bin`.
 
-- `/boot` 
-  - répertoire d'entrée du système ;
-  - `crt0.S` initialise le matériel et lance le programme principal du système (`kernel_start`)
-- `/kernel`
-  - répertoire sources du noyau
-  - c'est ici que tout (ou presque) va se passer
-- `/lib`
-  - quelques outils utiles (par ex.: `printf`)
-- `/include`
-  - pour les `.h` c'est ici
+### Run
 
-### Prise en main de l'environnement
+```bash
+make run
+```
 
-- La compilation s'effectue via la commande `make`
-  - si tout va bien, résultat : `kernel.bin`
-- Exécution : `make run`
-  - Une fenêtre QEMU doit apparaître
-  - Le système est exécuté
-- Mise au point 
-  - Lancer : `make dbg`
-  - Mettre un point d'arrêt au début du système : `b kernel_start`
-  - Lancer l'exécution : `cont` ou `r`
-  - Afficher un variable : `display` nom de la variable
-  - `n`: Next, `s` : Step
+Boots the kernel in QEMU.
+
+### Debug
+
+```bash
+make dbg-qemu   # GDB attached to QEMU
+```
+
+### Clean
+
+```bash
+make clean
+```
